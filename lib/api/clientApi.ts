@@ -1,10 +1,8 @@
 import { Note } from "@/types/note";
+import { User } from "@/types/user";
 import axios from "axios";
+import { nextServer } from "./api";
 
-axios.defaults.baseURL = "https://notehub-public.goit.study/api";
-axios.defaults.headers.common["Authorization"] = `Bearer ${
-  process.env.NEXT_PUBLIC_NOTEHUB_TOKEN
-}`;
 interface NoteResp {
   notes: Note[];
   totalPages: number;
@@ -50,4 +48,18 @@ export async function deleteNote(id: string) {
 export async function fetchNoteById(id: string) {
   const resp = await axios.get<Note>(`/notes/${id}`);
   return resp.data;
+}
+// AUTH LOGIC
+export interface Credentials {
+  email: string;
+  password: string;
+}
+export async function register(credentials: Credentials) {
+  const { data } = await nextServer.post<User>("/auth/register", credentials);
+  return data;
+}
+
+export async function login(credentials: Credentials) {
+  const { data } = await nextServer.post<User>("/auth/login", credentials);
+  return data;
 }
