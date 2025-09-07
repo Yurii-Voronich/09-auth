@@ -4,16 +4,21 @@ import css from "./SignInPage.module.css";
 import { Credentials, login } from "@/lib/api/clientApi";
 import { ApiError } from "next/dist/server/api-utils";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/lib/store/authStore";
 
 const SignInPage = () => {
   const [error, setError] = useState("");
   const router = useRouter();
+  const setUser = useAuthStore((state) => state.setUser);
+
   const handleSubmit = async (formData: FormData) => {
     const credentials = Object.fromEntries(formData) as unknown as Credentials;
     try {
       const user = await login(credentials);
-      console.log(user);
-      router.push("/profile");
+      if (user) {
+        setUser(user);
+        router.push("/profile");
+      }
     } catch (error) {
       setError((error as ApiError).message ?? "something went wrong");
     }

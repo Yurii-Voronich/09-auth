@@ -63,3 +63,7 @@ export async function login(credentials: Credentials) {
   const { data } = await nextServer.post<User>("/auth/login", credentials);
   return data;
 }
+
+export const logout = async () => {
+  await nextServer.post<User>("/auth/logout");
+};

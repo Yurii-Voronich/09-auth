@@ -14,9 +14,7 @@ const Header = () => {
           <li>
             <Link href="/">Home</Link>
           </li>
-          <li>
-            <TagsMenu />
-          </li>
+
           <AuthNavigation />
         </ul>
       </nav>
