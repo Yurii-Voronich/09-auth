@@ -22,11 +22,16 @@ const NoteForm = () => {
   });
 
   const handleSubmit = (formData: FormData) => {
-    const values = Object.fromEntries(formData) as unknown as NewNote;
+    const values: NewNote = {
+      title: formData.get("title") as string,
+      content: formData.get("content") as string,
+      tag: formData.get("tag") as string,
+    };
+    console.log(values);
     mutation.mutate(values, {
       onSuccess: () => {
-        router.push("/notes/filter/All");
         clearDraft();
+        router.push("/notes/filter/All");
       },
     });
   };
@@ -87,7 +92,7 @@ const NoteForm = () => {
 
       <div className={css.actions}>
         <button
-          onClick={useRouter().back}
+          onClick={() => router.back()}
           type="button"
           className={css.cancelButton}
         >

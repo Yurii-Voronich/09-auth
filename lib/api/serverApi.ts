@@ -20,11 +20,12 @@ interface fetchNotesProps {
   headers: { Cookie: string };
 }
 
-export default async function fetchNotes(
+export async function fetchNotes(
   page: number,
   searchQuery?: string,
   tag?: string
 ): Promise<NoteResp> {
+  const cookieStore = cookies();
   const params: fetchNotesProps = {
     params: { page, perPage: 12 },
     headers: { Cookie: cookieStore.toString() },
@@ -45,7 +46,7 @@ export const fetchNoteById = async (id: string): Promise<Note> => {
   return response.data;
 };
 
-export const getMe = async () => {
+export const getMe = async (): Promise<User> => {
   const cookieStore = await cookies();
   const { data } = await nextServer.get<User>("/users/me", {
     headers: { Cookie: cookieStore.toString() },
