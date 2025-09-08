@@ -2,13 +2,13 @@
 import Pagination from "@/components/Pagination/Pagination";
 import css from "./NotesPage.module.css";
 import SearchBox from "@/components/SearchBox/SearchBox";
-import fetchNotes from "@/lib/api/clientApi";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import NoteList from "@/components/NoteList/NoteList";
 import Loader from "@/components/Loader/Loader";
 import Link from "next/link";
+import fetchNotes from "@/lib/api/clientApi";
 
 interface NotesClientPageProps {
   tag: string;
@@ -30,7 +30,7 @@ const NotesClientPage = ({ tag }: NotesClientPageProps) => {
     queryKey: ["notes", page, search, tag],
     queryFn: () => fetchNotes(page, search, tag),
     placeholderData: keepPreviousData,
-    refetchOnMount: false,
+    // refetchOnMount: false,
   });
   return (
     <div className={css.app}>

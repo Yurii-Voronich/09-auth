@@ -1,8 +1,12 @@
 import { Note } from "@/types/note";
 import { User } from "@/types/user";
-import axios from "axios";
 import { nextServer } from "./api";
 
+export interface NewNote {
+  title: string;
+  content: string;
+  tag: string;
+}
 interface NoteResp {
   notes: Note[];
   totalPages: number;
@@ -26,27 +30,22 @@ export default async function fetchNotes(
   if (searchQuery) params.search = searchQuery;
   if (tag) params.tag = tag;
 
-  const res = await axios.get<NoteResp>("/notes", { params });
+  const res = await nextServer.get<NoteResp>("/notes", { params });
   return res.data;
 }
 
-export interface NewNote {
-  title: string;
-  content: string;
-  tag: string;
-}
 export async function createNote(newNoteData: NewNote) {
-  const resp = await axios.post<Note>("/notes", newNoteData);
+  const resp = await nextServer.post<Note>("/notes", newNoteData);
   return resp.data;
 }
 
 export async function deleteNote(id: string) {
-  const resp = await axios.delete<Note>(`/notes/${id}`);
+  const resp = await nextServer.delete<Note>(`/notes/${id}`);
   return resp.data;
 }
 
 export async function fetchNoteById(id: string) {
-  const resp = await axios.get<Note>(`/notes/${id}`);
+  const resp = await nextServer.get<Note>(`/notes/${id}`);
   return resp.data;
 }
 // AUTH LOGIC
@@ -66,4 +65,27 @@ export async function login(credentials: Credentials) {
 
 export const logout = async () => {
   await nextServer.post<User>("/auth/logout");
+};
+
+interface SessionStatus {
+  success: boolean;
+}
+
+export const checkSession = async () => {
+  const { data } = await nextServer.get<SessionStatus>("/auth/session");
+  return data.success;
+};
+
+export const getMe = async () => {
+  const { data } = await nextServer.get<User>("/users/me");
+  return data;
+};
+interface UserToUpdate {
+  email?: string;
+  username?: string;
+}
+
+export const updateUser = async (updatedUser: UserToUpdate) => {
+  const { data } = await nextServer.patch<User>("/users/me", updatedUser);
+  return data;
 };
